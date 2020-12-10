@@ -8,8 +8,6 @@ import {
   Button,
   ListRenderItemInfo,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 
 type listInfo = {
   text: string;
@@ -25,14 +23,12 @@ export function ListScreen() {
   ];
   //List更新用のState
   const [list, setList] = useState(listContent);
-  const [listLength, setListLength] = useState(listContent.length);
 
   //ボタンを押したときにListの配列に要素追加してsetListで更新する関数。
-  const addedList = (list: listInfo[]) => {
-    list.push({ text: `test${list.length + 1}` });
-    setList(list);
-    setListLength(list.length); //この一行があるおかげでFlatListがListの更新があるのがわかるらしい
-    console.log(list);
+  const addList = (list: listInfo[]) => {
+    const array: listInfo = { text: `test${list.length + 1}` };
+    const newList = list.concat(array);
+    setList(newList);
   };
 
   return (
@@ -40,7 +36,7 @@ export function ListScreen() {
       <Button
         title="add List"
         onPress={() => {
-          addedList(list);
+          addList(list);
         }}
       />
       <FlatList
@@ -48,7 +44,7 @@ export function ListScreen() {
         renderItem={(item: ListRenderItemInfo<listInfo>) => {
           return <Text style={styles.listItem}>{item.item.text}</Text>;
         }}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(_, index) => index.toString()}
       />
     </View>
   );
